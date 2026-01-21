@@ -10,11 +10,13 @@ class Chip:
     def init(self, length, width):
         self.length = length
         self.width = width
+        self.totalPower = 0
         self.components = []
         self.connections = {}
         self.wirelength = 0
     
     def addComponent(self, c : Component):
+        self.totalPower += c.power()
         self.components.append(c)
     
     def addConnections(self, con, con2):
@@ -23,16 +25,39 @@ class Chip:
         self.connections[con].append(con2) 
 
     def generateRandomPlacement(self):
+        if self.componenents == [] and self.connections == []:
+            self.components = [
+                Component('CPU_core_0', 2.0, 2.0, 15.0, ['L1_cache_0']),
+                Component('CPU_core_1', 2.0, 2.0, 15.0, ['L1_cache_1']),
+                Component('L1_cache_0', 1.0, 1.0, 2.0, ['L2_cache']),
+                Component('L1_cache_1', 1.0, 1.0, 2.0, ['L2_cache']),
+                Component('L2_cache', 2.5, 2.5, 5.0, ['memory_ctrl']),
+                Component('GPU_core', 3.0, 3.0, 25.0, ['L2_cache']),  # Shares L2
+                Component('memory_ctrl', 2.0, 1.5, 8.0, ['IO_block']),
+                Component('IO_block', 1.5, 2.0, 4.0, []),
+            ]
+            # if orientation needs to be changed, change attribute of componenet ('v'->'h')
+
         #range of occupied
         #generate visual layout
         for i in self.components:
             # place each one 
 
-    def wirelength(self):
+    def wirelength(self, c : Component, c2 : Component):
+        # assuming vertical orientation
+        center_c = (c.x + c.width/2, c.y + c.height/2)
+        center_c2 = (c2.x + c2.width/2, c2.y + c2.height/2)
+        if c.orientation == 'h':
+            center_c = (c.x + c.height/2, c.y + c.width/2)
+        if c2.orientation == 'h':
+            center_c2 = (c2.x + c2.height/2, c2.y + c2.width/2)
+        return math.dist(center_c2, center_c)
 
-    # how does this work? is it between componenets or on compoenents
-    each component has a pwoer consumption feature and we want to avoid putting highly power consumptive componenets adjacent to each other
-    def powerDensity(self):
+    # each component has a power consumption feature and we want to avoid putting highly power consumptive componenets adjacent to each other
+    def powerPercentage(self, c : Component):
+        # normalizes power
+        return (c.power() / self.totalPower) * 100
+        
 
     # how much of the area of the chip are we using
     def optimalArea(self):

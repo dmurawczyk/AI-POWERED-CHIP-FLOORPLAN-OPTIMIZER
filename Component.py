@@ -10,6 +10,7 @@ class Component:
         # upper left
         self.x = 0
         self.y = 0
+        self.orientation = 'v'
         self.name = name
         self.power = power
         self.length = length
@@ -20,18 +21,8 @@ class Component:
     def corners(self):
         # upper left, upper right, lower left, lower right
         return [(self.x, self.y), (self.x+self.width, self.y), (self.x, self.y + self.length), (self.x + self.width, self.y + self.length)]
-
-
-
-components = [
-        Component('CPU_core_0', 2.0, 2.0, 15.0, ['L1_cache_0']),
-        Component('CPU_core_1', 2.0, 2.0, 15.0, ['L1_cache_1']),
-        Component('L1_cache_0', 1.0, 1.0, 2.0, ['L2_cache']),
-        Component('L1_cache_1', 1.0, 1.0, 2.0, ['L2_cache']),
-        Component('L2_cache', 2.5, 2.5, 5.0, ['memory_ctrl']),
-        Component('GPU_core', 3.0, 3.0, 25.0, ['L2_cache']),  # Shares L2
-        Component('memory_ctrl', 2.0, 1.5, 8.0, ['IO_block']),
-        Component('IO_block', 1.5, 2.0, 4.0, []),
+    def power(self):
+        return self.power
 
 
 # # ✅ HIGHLY STANDARD (99% of chips)
