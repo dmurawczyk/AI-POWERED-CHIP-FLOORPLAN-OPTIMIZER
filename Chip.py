@@ -1,13 +1,14 @@
 # Chip class
 
 import math
+import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler 
 
 class Chip:
-    def init(self, length, width):
+    def __init__(self, length, width):
         self.length = length
         self.width = width
         self.totalPower = 0
@@ -25,6 +26,8 @@ class Chip:
         self.connections[con].append(con2) 
 
     def generateRandomPlacement(self):
+        #create each row of our training data
+        
         if self.componenents == [] and self.connections == []:
             self.components = [
                 Component('CPU_core_0', 2.0, 2.0, 15.0, ['L1_cache_0']),
@@ -37,11 +40,47 @@ class Chip:
                 Component('IO_block', 1.5, 2.0, 4.0, []),
             ]
             # if orientation needs to be changed, change attribute of componenet ('v'->'h')
+        n = len(components)
+        area = (chip.width)*(chip.length)/n
+        rows = math.ceil(math.sqrt(n))
+        cols = math.ceil(n/rows)
+        region_h = chip.length/rows
+        region_w = chip.width/cols
+        parts = []
+
+        for i in self.components:
+            parts.append(i)
+
+        columns = [0]*cols
+        grid = columns*rows
+
+        for component in self.components:
+            component.orientation = random.choice(['v', 'h'])
+            component.order = random.choice()
+            # default
+            if component.orientation == 'v':
+                new_width = component.width
+                new_height = component.height
+            # flip dimensions
+            if component.orientation == 'h':
+                new_width = component.height
+                new_height = component.width
+        
+        for i in range(cols):
+            for j in range(rows):
+                label = random.choice(parts)
+                grid[i][j]= label
+                parts.remove(label)
+
+
 
         #range of occupied
         #generate visual layout
         for i in self.components:
             # place each one 
+    
+    def network(self):
+        # input: chip dimensions, cost per datapoint 
 
     def wirelength(self, c : Component, c2 : Component):
         # assuming vertical orientation
@@ -56,8 +95,7 @@ class Chip:
     # each component has a power consumption feature and we want to avoid putting highly power consumptive componenets adjacent to each other
     def powerPercentage(self, c : Component):
         # normalizes power
-        return (c.power() / self.totalPower) * 100
-        
+        return (c.power() / self.totalPower) * 100   
 
     # how much of the area of the chip are we using
     def optimalArea(self):
@@ -72,7 +110,6 @@ class Chip:
 #         max_y = 7.2
 #         Calculate Area:
 #         pythonarea = max_x × max_y = 5.5 × 7.2 = ??
-# ```
 
     
     def cost(self, wirelength, powerDensity. optimalArea):

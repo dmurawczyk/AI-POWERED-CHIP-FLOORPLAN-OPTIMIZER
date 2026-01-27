@@ -6,7 +6,7 @@ import pandas as pd
 
 # are conenctins standard between components
 class Component:
-    def init(self, name, length, width, power, connections):
+    def __init__(self, name, length, width, power, connections):
         # upper left
         self.x = 0
         self.y = 0
@@ -21,7 +21,7 @@ class Component:
     def corners(self):
         # upper left, upper right, lower left, lower right
         return [(self.x, self.y), (self.x+self.width, self.y), (self.x, self.y + self.length), (self.x + self.width, self.y + self.length)]
-    def power(self):
+    # def power(self):
         return self.power
 
 
